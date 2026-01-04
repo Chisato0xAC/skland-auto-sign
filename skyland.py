@@ -1,3 +1,4 @@
+import sys
 import hashlib
 import hmac
 import json
@@ -315,12 +316,20 @@ def input_for_token():
 
 def start():
     token = init_token()
+    falied = False
+    
     for i in token:
         try:
             do_sign(get_cred_by_token(i))
         except Exception as ex:
+            failed = True
             print(f'签到失败，原因：{str(ex)}')
             logging.error('', exc_info=ex)
+
+    if failed:
+        print("签到失败")
+        sys.exit(1)
+    
     print("签到完成！")
 
 
@@ -336,3 +345,4 @@ if __name__ == '__main__':
     end_time = time.time()
     logging.info(f'complete with {(end_time - start_time) * 1000} ms')
     logging.info('===========ending============')
+
